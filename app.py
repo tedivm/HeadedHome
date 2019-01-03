@@ -10,9 +10,10 @@ twilio_client = Client(os.environ['TWILIO_ACCOUNT'], os.environ['TWILIO_TOKEN'])
 START_STATION = 'DBRK'
 DIRECTION = 'WARM'
 
-BART_TIME = 35
-BART_WALK = 7
-HOME_WALK = 17
+BART_TIME = 34
+BART_WALK = 6
+BART_WALK_VARIANCE = 0.5
+HOME_WALK = 15
 TRAVEL_BUFFER = 10
 
 BART_API_KEY = os.environ.get('BART_API_KEY', 'MW9S-E7SL-26DU-VV8V')
@@ -42,7 +43,7 @@ def get_home_estimate():
     transit_time = BART_TIME + HOME_WALK
     now = datetime.datetime.now(timezone('America/Los_Angeles'))
     window_start = now + datetime.timedelta(minutes = (trains[0] + transit_time))
-    if trains[0] >= BART_WALK * 1.6:
+    if trains[0] >= BART_WALK + (BART_WALK * BART_WALK_VARIANCE):
         window_end = now + datetime.timedelta(minutes = (trains[0] + transit_time + TRAVEL_BUFFER))
     else:
         window_end = now + datetime.timedelta(minutes = (trains[1] + transit_time + TRAVEL_BUFFER))
